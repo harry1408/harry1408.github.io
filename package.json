@@ -2,7 +2,7 @@
   "name": "valencia-dashboard",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://harry1408.github.io/spain_new_frontend/",
+  "homepage": "https://harry1408.github.io/",
   "dependencies": {
     "leaflet": "^1.9.4",
     "react": "^18.2.0",
