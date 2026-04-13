@@ -90,15 +90,99 @@ export const fmtNum  = v => v == null ? "—" : Number(v).toLocaleString("en-US"
 
 import React from "react";
 
-// Inject chart animation keyframe once
+// Inject keyframes once (chart animation + skeleton shimmer)
 if (typeof document !== "undefined" && !document.getElementById("_chart-anim-style")) {
   const s = document.createElement("style");
   s.id = "_chart-anim-style";
-  s.textContent = `@keyframes chartFadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }`;
+  s.textContent = `
+    @keyframes chartFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position:  200% 0; }
+    }
+  `;
   document.head.appendChild(s);
+}
+
+// ── Skeleton primitives ───────────────────────────────────────────────────
+const SHIMMER = {
+  background: "linear-gradient(90deg,#F2F4F6 25%,#E8EAF0 50%,#F2F4F6 75%)",
+  backgroundSize: "200% 100%",
+  animation: "shimmer 1.4s infinite",
+};
+
+export function Skeleton({ w = "100%", h = 14, r = 6, style }) {
+  return <div style={{ width: w, height: h, borderRadius: r, flexShrink: 0, ...SHIMMER, ...style }} />;
+}
+
+export function SkeletonStatCard() {
+  return (
+    <div style={{ background:"#fff", border:"1px solid #E2E0DB", borderRadius:14,
+      padding:"18px 22px", minWidth:140, boxShadow:"0 1px 3px rgba(11,18,57,0.07)" }}>
+      <Skeleton w={70} h={10} r={4} style={{ marginBottom:10 }} />
+      <Skeleton w={100} h={24} r={5} style={{ marginBottom:8 }} />
+      <Skeleton w={80} h={10} r={4} />
+    </div>
+  );
+}
+
+export function SkeletonChartCard({ h = 220, lines }) {
+  return (
+    <div style={{ background:"#fff", border:"1px solid #E2E0DB", borderRadius:14,
+      padding:"22px 24px", boxShadow:"0 1px 3px rgba(11,18,57,0.07)" }}>
+      <Skeleton w={160} h={14} r={5} style={{ marginBottom:18 }} />
+      {lines
+        ? <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+            {Array.from({length:lines}).map((_,i)=>(
+              <div key={i} style={{ display:"flex", gap:8, alignItems:"center" }}>
+                <Skeleton w={80} h={12} r={4} />
+                <Skeleton w={`${55+((i*37)%35)}%`} h={20} r={4} />
+                <Skeleton w={50} h={12} r={4} style={{ marginLeft:"auto" }} />
+              </div>
+            ))}
+          </div>
+        : <Skeleton w="100%" h={h} r={8} />
+      }
+    </div>
+  );
+}
+
+export function SkeletonCard({ lines = 3, compact = false }) {
+  return (
+    <div style={{ background:"#fff", border:"1px solid #E2E0DB", borderRadius:14,
+      padding: compact ? "14px 16px" : "18px 20px",
+      boxShadow:"0 1px 3px rgba(11,18,57,0.07)" }}>
+      <div style={{ display:"flex", justifyContent:"space-between", marginBottom:12 }}>
+        <Skeleton w={140} h={14} r={5} />
+        <Skeleton w={40} h={14} r={5} />
+      </div>
+      <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+        {Array.from({length:lines}).map((_,i)=>(
+          <Skeleton key={i} w={`${100 - i*12}%`} h={11} r={4} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function SkeletonTableRows({ rows = 5, cols = 6 }) {
+  return (
+    <>
+      {Array.from({length:rows}).map((_,i)=>(
+        <tr key={i} style={{ borderBottom:"1px solid #E2E0DB",
+          background: i%2===0 ? "#F2F4F6" : "#fff" }}>
+          {Array.from({length:cols}).map((_,j)=>(
+            <td key={j} style={{ padding:"9px 8px" }}>
+              <Skeleton w={j===0?80:`${50+((i+j)*17)%40}%`} h={11} r={4} />
+            </td>
+          ))}
+        </tr>
+      ))}
+    </>
+  );
 }
 
 export function StatCard({ label, value, sub, accent, children }) {

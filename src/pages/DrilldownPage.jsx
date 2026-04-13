@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { BarChart,Bar,XAxis,YAxis,CartesianGrid,Tooltip,ResponsiveContainer,Cell,
          LineChart,Line,Legend } from "recharts";
-import { T,StatCard,ChartCard,Tag,Pill,fmt,fmtFull,fmtNum,COLORS,UNIT_COLORS,ESG_COLORS,AddressBreadcrumb,MapPinPopup,PRICE_COLOR,M2_COLOR} from "../components/shared.jsx";
+import { T,StatCard,ChartCard,Tag,Pill,fmt,fmtFull,fmtNum,COLORS,UNIT_COLORS,ESG_COLORS,AddressBreadcrumb,MapPinPopup,PRICE_COLOR,M2_COLOR,Skeleton,SkeletonStatCard,SkeletonChartCard,SkeletonCard} from "../components/shared.jsx";
 import { API } from "../App.jsx";
 import LeafletMap from "../components/LeafletMap.jsx";
 import LoadingHouse from "../components/LoadingHouse.jsx";
